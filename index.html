@@ -289,8 +289,8 @@ if(pend){const m=L.find(m=>m.f==pend.f&&m.t==pend.t&&m.c==n);if(m)play(m);return
 if(placing(s)){const ms=L.filter(m=>m.t==n);if(ms.length)choose(ms,-1,n);return}
 if(s.b[n]==s.t){if(L.some(m=>m.f==n)){sel=n;anim=null;draw()}return}
 if(sel>=0){const ms=L.filter(m=>m.f==sel&&m.t==n);if(ms.length)choose(ms,sel,n)}}
-function status(){if(over)return ON?((over==ON.my?"Tu as gagné !":esc(ON.nm[over])+" gagne !")+(ON.nx?" Revanche proposée.":"")):`${NAME[over]} gagne la partie !`;
-if(ON&&s.t!=ON.my)return "Au tour de "+esc(ON.nm[s.t])+"…";
+function status(){if(over)return ON?((over==ON.my?(ON.left?"Ton adversaire est parti !":"Tu as gagné !"):esc(ON.nm[over])+" gagne !")+(ON.nx?" Revanche proposée.":"")):`${NAME[over]} gagne la partie !`;
+if(ON&&s.t!=ON.my)return pend?esc(ON.nm[s.t])+" forme un moulin !":"Au tour de "+esc(ON.nm[s.t])+"…";
 if(busy)return mode?"Le Rouge (ordinateur) joue…":"";
 if(pend)return "Moulin ! Touche le pion adverse à retirer.";
 if(placing(s))return `${ON?"À toi":NAME[s.t]} : pose un pion sur une case libre.`;
@@ -320,6 +320,7 @@ if(cl)top+=g;else h+=g}
 h+=top;
 
 if(sel>=0)h+=`<circle cx="${X[sel]}" cy="${Y[sel]}" r="36" fill="none" stroke="#ffce00" stroke-width="6"/>`;
+if(pend&&ON){const pp=s.t;for(const mm of mAt[pend.t])if(mm.every(x=>vb[x]==pp))for(const n of mm)h+=`<circle class="pu" cx="${X[n]}" cy="${Y[n]}" r="37" fill="none" stroke="#ffce00" stroke-width="6"/>`}
 for(const n of cp)h+=`<circle class="pu" cx="${X[n]}" cy="${Y[n]}" r="37" fill="none" stroke="#e2b94c" stroke-opacity=".9" stroke-width="5"/><circle class="pu" cx="${X[n]}" cy="${Y[n]}" r="37" fill="none" stroke="#e2b94c" stroke-opacity=".16" stroke-width="12"/>`;
 for(let n=0;n<24;n++)h+=`<circle data-n="${n}" cx="${X[n]}" cy="${Y[n]}" r="46" fill="transparent" style="cursor:pointer"/>`;
 h+="</g>";
@@ -440,7 +441,7 @@ if(/fetch|network/i.test(m))return "Connexion impossible. Vérifie ton réseau."
 return "Erreur : "+m}
 async function olOpen(){olEl.hidden=false;OL.msg="";
 try{await olLib()}catch(e){OL.view="err";olRender();return}
-try{sb=sb||window.supabase.createClient(SBURL,SBKEY);
+try{sb=sb||window.supabase.createClient(SBURL,SBKEY);if(!OL.au){OL.au=1;sb.auth.onAuthStateChange((ev,ss)=>{OL.tok=ss?ss.access_token:null})}
 const r=await sb.auth.getSession();
 if(r.data.session)await olMe(r.data.session.user.id);
 else{OL.view="auth";try{OL.tab=localStorage.getItem("tiq7acc")?"in":"new"}catch(e){OL.tab="new"}}}
@@ -543,8 +544,8 @@ function olGame(g){if(!ON||!g||g.id!=ON.id)return;
 if(g.next_id&&!ON.nx){ON.nx=g.next_id;draw()}
 if(g.move_no<=ON.n)return;
 const m=g.last_move,nx=g.move_no==ON.n+1;ON.n=g.move_no;
-if(m&&m.ab){over=g.winner||0;sel=-1;pend=null;draw();if(over)snd(520,.4);if(over==ON.my)addWin();return}
-if(nx&&m&&s.t==m.p)play({f:m.f,t:m.t,c:m.c},true);
+if(m&&m.ab){over=g.winner||0;ON.left=over==ON.my;sel=-1;pend=null;draw();if(over)snd(520,.4);if(over==ON.my)addWin();return}
+if(nx&&m&&s.t==m.p)olRemote(m);
 else{s=g.state;over=g.winner||0;sel=-1;pend=null;anim=null;busy=false;draw()}}
 async function olSync(){if(!ON||!sb)return;const r=await sb.from("games").select("*").eq("id",ON.id).maybeSingle();if(r.data)olGame(r.data)}
 async function olPush(m,p){const O=ON,n=++O.n;
@@ -570,6 +571,11 @@ async function olFD(id){OL.busy=true;const r=await sb.from("friendships").delete
 async function olFCh(uid){if(OL.sent.some(x=>x.to_id==uid&&x.status=="pending"))return olToast("Tu l’as déjà défié : attends sa réponse.");
 OL.busy=true;const r=await sb.from("invitations").insert({from_id:OL.me.id,to_id:uid});OL.busy=false;
 if(r.error)return olToast("Envoi impossible : "+r.error.message);olToast("Défi envoyé !");await olLoad()}
+function olRemote(m){const mv={f:m.f,t:m.t,c:m.c};
+if(!(mv.c>=0)){play(mv,true);return}
+const k=sess;busy=true;pend={f:mv.f,t:mv.t};anim={f:mv.f,t:mv.t,c:-1,p:s.t,sl:mv.f<0?s.h[s.t]-1:-1};pion();draw();
+setTimeout(()=>{if(k!=sess||!ON||!pend||pend.t!=mv.t||pend.f!=mv.f)return;play(mv,true)},1300)}
+addEventListener("pagehide",()=>{if(!ON||over||!OL.tok)return;try{fetch(SBURL+"/rest/v1/rpc/abandonner",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json",apikey:SBKEY,Authorization:"Bearer "+OL.tok},body:JSON.stringify({p_id:ON.id})})}catch(e){}});
 olEl.onclick=async e=>{const b=e.target.closest("[data-k]");if(!b||OL.busy)return;const k=b.dataset.k;
 if(k=="close"){olEl.hidden=true;return}
 if(k=="retry")return olOpen();
