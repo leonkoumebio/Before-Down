@@ -152,6 +152,13 @@ main{height:100%;box-sizing:border-box}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#9a8f80;margin-right:8px;vertical-align:1px}
 .dot.on{background:#2fbf4a;box-shadow:0 0 0 2px #fff7e6,0 0 6px #2fbf4a}
 body.onl #pz,body.onl #sn{display:none}
+#gr{position:fixed;z-index:16}
+#gr .cd{width:min(86%,320px);text-align:center}
+#gr h3{margin:0 0 6px;font-size:36px}
+#gr p{margin:0 0 16px;font:700 16px Nunito,system-ui,sans-serif}
+#gr .pk{width:100%;margin:0;font-family:"Lilita One","Arial Rounded MT Bold",system-ui,sans-serif}
+#gr.w h3{color:#2d5a12}
+#gr.l h3{color:#8a1c14}
 @supports(height:1dvh){#ol{--v:1dvh}}
 #ol .scene{position:fixed;inset:0;width:100%;height:100%;max-height:none;filter:none;touch-action:auto;z-index:0}
 .olw{position:relative;z-index:1}
@@ -329,8 +336,8 @@ h+=`${on?`<rect x="10" y="${ty}" width="680" height="90" rx="16" fill="none" str
 <text x="30" y="${ty+42}" font-family="Lilita One,Arial Black,sans-serif" font-size="${fs(p)}" fill="#ffe9c2" fill-opacity=".4">${lab(p)}</text><text x="30" y="${ty+40}" font-family="Lilita One,Arial Black,sans-serif" font-size="${fs(p)}" fill="#3b2210">${lab(p)}</text>${pc(40,ty+66,9,p)}<text x="56" y="${ty+74}" font-family="Lilita One,Arial Black,sans-serif" font-size="20" fill="#3b2210">× ${cnt}</text>`;
 for(let i=0;i<10;i++){const[x,y]=slot(p,i);h+=`<circle cx="${x}" cy="${y+2}" r="24" fill="#e8c08e" fill-opacity=".5"/><circle cx="${x}" cy="${y}" r="23" fill="#24130a"/><circle cx="${x}" cy="${y+3}" r="20" fill="#3d2412"/>`;if(i<hh[p])h+=`<g data-tr="${p}-${i}">${pc(x,y+1,21,p)}</g>`;if(i>=10-nc){let cl="",st="";if(i==10-nc&&anim&&anim.c>=0&&anim.v==3-p){cl="fly";st=`--dx:${X[anim.c]-x}px;--dy:${Y[anim.c]+120-y}px`}h+=`<g class="${cl}" style="${st}">${pc(x,y+1,21,3-p)}</g>`}}}
 $("bd").innerHTML=h+"</svg>";
-$("st").innerHTML=status()+(over?`<button class="bt sm" id="ag">${ON?"Revanche":"Rejouer"}</button>${ON?`<button class="bt sm" id="mn">Menu</button>`:""}`:"");
-if(over)$("ag").onclick=ON?olRev:()=>start(mode,lv);if(over&&ON)$("mn").onclick=olLeave}
+$("st").innerHTML=status()+(over&&!ON?`<button class="bt sm" id="ag">Rejouer</button>`:"");
+if(over&&!ON)$("ag").onclick=()=>start(mode,lv);if(over&&ON&&!ON.rs){ON.rs=1;setTimeout(olResult,ON.left?300:1300)}}
 let dg=null,noClick=0,dragged=false;
 function svgPt(e){const sv=$("bd").querySelector("svg"),pt=sv.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;return pt.matrixTransform(sv.getScreenCTM().inverse())}
 function nearest(x,y,r){let b=-1,d=r*r;for(let n=0;n<24;n++){const q=(X[n]-x)**2+(Y[n]-y)**2;if(q<d){d=q;b=n}}return b}
@@ -528,7 +535,7 @@ const r=await sb.from("invitations").update({status:st}).eq("id",id);OL.busy=fal
 if(r.error)return olToast("Action impossible : "+r.error.message);
 if(st=="accepted")olToast("Défi accepté ! La partie en ligne arrive bientôt.");
 await olLoad()}
-function olStopG(){if(ON){if(ON.ch){try{sb.removeChannel(ON.ch)}catch(e){}}clearInterval(ON.tm)}}
+function olStopG(){if(ON){if(ON.ch){try{sb.removeChannel(ON.ch)}catch(e){}}clearInterval(ON.tm);clearInterval(ON.pt)}}
 async function olPlay(gid){if(!sb||!OL.me)return;
 const r=await sb.from("games").select("*").eq("id",gid).maybeSingle();
 if(!r.data)return olToast("Partie introuvable.");
@@ -539,12 +546,12 @@ ON={id:g.id,my:g.black_id==OL.me.id?1:2,n:g.move_no,nm:["",nm[g.black_id]||"Noir
 MUS.pause();ambStart();sess++;mode=0;lv=0;s=g.state;sel=-1;pend=null;over=g.winner||0;anim=null;busy=false;
 document.body.classList.add("onl");olEl.hidden=true;$("menu").hidden=true;$("game").hidden=false;$("pm").hidden=true;draw();
 ON.ch=sb.channel("g-"+g.id).on("postgres_changes",{event:"UPDATE",schema:"public",table:"games",filter:"id=eq."+g.id},p=>olGame(p.new)).subscribe();
-ON.tm=setInterval(olSync,4000)}
+ON.tm=setInterval(olSync,4000);ON.pt=setInterval(olPres,5000);olPres()}
 function olGame(g){if(!ON||!g||g.id!=ON.id)return;
 if(g.next_id&&!ON.nx){ON.nx=g.next_id;draw()}
 if(g.move_no<=ON.n)return;
 const m=g.last_move,nx=g.move_no==ON.n+1;ON.n=g.move_no;
-if(m&&m.ab){over=g.winner||0;ON.left=over==ON.my;sel=-1;pend=null;draw();if(over)snd(520,.4);if(over==ON.my)addWin();return}
+if(m&&m.ab){over=g.winner||0;ON.left=over==ON.my;sel=-1;pend=null;draw();if(over)snd(520,.4);return}
 if(nx&&m&&s.t==m.p)olRemote(m);
 else{s=g.state;over=g.winner||0;sel=-1;pend=null;anim=null;busy=false;draw()}}
 async function olSync(){if(!ON||!sb)return;const r=await sb.from("games").select("*").eq("id",ON.id).maybeSingle();if(r.data)olGame(r.data)}
@@ -576,6 +583,17 @@ if(!(mv.c>=0)){play(mv,true);return}
 const k=sess;busy=true;pend={f:mv.f,t:mv.t};anim={f:mv.f,t:mv.t,c:-1,p:s.t,sl:mv.f<0?s.h[s.t]-1:-1};pion();draw();
 setTimeout(()=>{if(k!=sess||!ON||!pend||pend.t!=mv.t||pend.f!=mv.f)return;play(mv,true)},1300)}
 addEventListener("pagehide",()=>{if(!ON||over||!OL.tok)return;try{fetch(SBURL+"/rest/v1/rpc/abandonner",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json",apikey:SBKEY,Authorization:"Bearer "+OL.tok},body:JSON.stringify({p_id:ON.id})})}catch(e){}});
+async function olPres(){if(!ON||over||document.hidden||!sb)return;const O=ON;
+const r=await sb.rpc("presence_partie",{p_id:O.id});if(ON===O&&r.data===true)olSync()}
+function olResult(){if(!ON||!over)return;const w=over==ON.my,gr=$("gr");
+gr.className="ov "+(w?"w":"l");
+gr.querySelector("h3").textContent=ON.left?"Adversaire parti":w?"Vainqueur":"Défaite";
+gr.querySelector("p").textContent=ON.left?"Ton adversaire a quitté la partie.":w?"Bravo, tu as battu "+ON.nm[3-ON.my]+" !":ON.nm[over]+" remporte la partie.";
+gr.hidden=false}
+function olBack(){$("gr").hidden=true;olLeave();olEl.hidden=false;OL.view="hub";OL.msg="";olRender()}
+document.body.insertAdjacentHTML("beforeend",'<div id="gr" class="ov" hidden><div class="cd"><h3></h3><p></p><button class="pk g" id="gk">OK</button></div></div>');
+$("gk").onclick=olBack;
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&ON&&!over){olPres();olSync()}});
 olEl.onclick=async e=>{const b=e.target.closest("[data-k]");if(!b||OL.busy)return;const k=b.dataset.k;
 if(k=="close"){olEl.hidden=true;return}
 if(k=="retry")return olOpen();
