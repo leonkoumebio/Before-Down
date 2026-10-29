@@ -424,6 +424,9 @@ try{if(!ambWired&&location.protocol.indexOf("http")==0){const a=getAC(),g=a.crea
 if(AC&&AC.state!="running")AC.resume();
 const p=AMB.play();if(p&&p.catch)p.catch(()=>{})}catch(e){}}
 $("pz").addEventListener("click",()=>AMB.pause());
+let ambUnl=false;
+function ambUnlock(){if(ambUnl||!AMB.paused)return;ambUnl=true;try{AMB.muted=true;const p=AMB.play();if(p&&p.catch)p.catch(()=>{});AMB.pause();AMB.currentTime=0;AMB.muted=false}catch(e){}}
+["touchend","click","keydown"].forEach(t=>document.addEventListener(t,()=>{ambUnlock();if(!mute&&!$("game").hidden&&$("pm").hidden&&AMB.paused)ambStart()},true));
 $("pc").addEventListener("click",()=>ambStart());
 $("pq").addEventListener("click",()=>AMB.pause());
 document.addEventListener("visibilitychange",()=>{if(document.hidden)AMB.pause();else if(!$("game").hidden&&$("pm").hidden)ambStart()});
