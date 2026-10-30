@@ -151,6 +151,7 @@ main{height:100%;box-sizing:border-box}
 #olt.on{opacity:1}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#9a8f80;margin-right:8px;vertical-align:1px}
 .dot.on{background:#2fbf4a;box-shadow:0 0 0 2px #fff7e6,0 0 6px #2fbf4a}
+.dot:not(.on){display:none}
 body.onl #pz,body.onl #sn{display:none}
 #gr{position:fixed;z-index:16}
 #gr .cd{width:min(86%,320px);text-align:center}
@@ -465,7 +466,7 @@ if(!OL.tm)OL.tm=setInterval(()=>{if(!olEl.hidden)olLoad()},8000);if(!OL.hb){olPi
 function olStop(){if(OL.ch){try{sb.removeChannel(OL.ch)}catch(e){}OL.ch=null}clearInterval(OL.tm);OL.tm=null;clearInterval(OL.hb);OL.hb=null}
 async function olLoad(){if(!OL.me)return;
 const since=new Date(Date.now()-30*60000).toISOString();
-const sel="id,status,from_id,to_id,game_id,created_at,f:profiles!invitations_from_id_fkey(pseudo),t:profiles!invitations_to_id_fkey(pseudo)";
+const sel="id,status,from_id,to_id,game_id,created_at,f:profiles!invitations_from_id_fkey(pseudo,last_seen),t:profiles!invitations_to_id_fkey(pseudo)";
 const r=await sb.from("invitations").select(sel).gte("created_at",since).order("created_at",{ascending:false});
 if(r.error)return;
 const rows=r.data||[],me=OL.me.id,rec=rows.filter(x=>x.to_id==me&&x.status=="pending"),sent=rows.filter(x=>x.from_id==me);
@@ -473,7 +474,7 @@ if(OL.seen){
 rec.forEach(x=>{if(!OL.seen.rec.has(x.id))olToast((x.f?x.f.pseudo:"Un joueur")+" te défie !")});
 sent.forEach(x=>{const o=OL.seen.st[x.id];if(o&&o!=x.status){const n=x.t?x.t.pseudo:"Le joueur";if(x.status=="accepted"){olToast(n+" a accepté ton défi !");if(!ON&&$("game").hidden&&x.game_id)olPlay(x.game_id)}else if(x.status=="declined")olToast(n+" a refusé ton défi.")}})}
 OL.seen={rec:new Set(rec.map(x=>x.id)),st:Object.fromEntries(sent.map(x=>[x.id,x.status]))};
-OL.inv=rec;OL.sent=sent;const gq=await sb.from("games").select("id,black_id,red_id").eq("winner",0).gte("created_at",new Date(Date.now()-864e5).toISOString()).order("created_at",{ascending:false}).limit(1);OL.game=gq.data&&gq.data[0]||null;
+OL.inv=rec;OL.sent=sent;const gq=await sb.from("games").select("id,black_id,red_id").eq("winner",0).gte("created_at",new Date(Date.now()-864e5).toISOString()).order("created_at",{ascending:false}).limit(1);OL.game=gq.data&&gq.data[0]||null;olResume();
 const fq=await sb.from("friendships").select("id,status,from_id,to_id,f:profiles!friendships_from_id_fkey(pseudo,last_seen),t:profiles!friendships_to_id_fkey(pseudo,last_seen)").order("created_at",{ascending:false});OL.fr=fq.data||[];
 const fr=OL.fr.filter(x=>x.to_id==me);if(OL.seenF)fr.forEach(x=>{if(!OL.seenF.has(x.id))olToast((x.f?x.f.pseudo:"Un joueur")+" t’a ajouté en ami !")});OL.seenF=new Set(fr.map(x=>x.id));
 const nb=$("onl").querySelector(".bdg")||$("onl").appendChild(Object.assign(document.createElement("i"),{className:"bdg"}));nb.textContent=rec.length;nb.hidden=!rec.length;
@@ -493,12 +494,12 @@ h=head("Jouer en ligne","close")+`<div class="cd"><div class="tabs"><button clas
 <div class="msg" id="olm"></div><button class="pk g" data-k="go-auth">${nw?"Créer mon profil":"Me connecter"}</button>
 <p class="note">${nw?"Garde bien ce mot de passe : il ne peut pas être récupéré. Il reste secret : tu ne partages que ton code joueur.":"Content de te revoir !"}</p></div>`}
 else if(v=="hub")h=`<div class="olh"><button class="wb" data-k="close" aria-label="Fermer">←</button><h2>Salut, ${esc(me.pseudo)} !</h2><span class="wsp"></span></div>
-${OL.game?`<button class="pk g" data-k="resume">Reprendre la partie</button>`:""}<button class="pk" data-k="go-inv">Invitations${n?`<i class="bdg">${n}</i>`:""}</button>
+<button class="pk" data-k="go-inv">Invitations${n?`<i class="bdg">${n}</i>`:""}</button>
 <button class="pk g" data-k="go-def">Défier un joueur</button>
 <button class="pk" data-k="go-fr">Amis${fn?`<i class="bdg">${fn}</i>`:""}</button>
 <button class="pk s" data-k="go-code">Mon code</button>
-${OL.game?`<button class="lnk" data-k="quit">Abandonner la partie</button>`:""}<button class="lnk" data-k="out">Se déconnecter</button>`;
-else if(v=="inv")h=head("Invitations","go-hub")+`<div class="cd">${n?OL.inv.map(x=>`<div class="it"><span><b>${esc(x.f?x.f.pseudo:"Joueur")}</b> te défie !</span><button class="mini" data-k="acc" data-id="${x.id}">Accepter</button><button class="mini r" data-k="dec" data-id="${x.id}">Refuser</button></div>`).join(""):"<p>Aucune invitation pour le moment.</p>"}</div>`;
+<button class="lnk" data-k="out">Se déconnecter</button>`;
+else if(v=="inv")h=head("Invitations","go-hub")+`<div class="cd">${n?OL.inv.map(x=>`<div class="it"><span><i class="dot${olOn(x.f)?" on":""}"></i><b>${esc(x.f?x.f.pseudo:"Joueur")}</b> te défie !${olOn(x.f)?"":"<br><small>Hors ligne : attends son retour.</small>"}</span>${olOn(x.f)?`<button class="mini" data-k="acc" data-id="${x.id}">Accepter</button>`:""}<button class="mini r" data-k="dec" data-id="${x.id}">Refuser</button></div>`).join(""):"<p>Aucune invitation pour le moment.</p>"}</div>`;
 else if(v=="def")h=head("Défier un joueur","go-hub")+`<div class="cd"><label class="lb" for="olc2">Code du joueur</label><input class="in" id="olc2" maxlength="9" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="TIQ-7K2M9"><div class="msg" id="olm"></div><button class="pk g" data-k="send">Envoyer l’invitation</button></div>${OL.sent.length?`<div class="cd"><h3>Mes invitations</h3>${OL.sent.map(x=>`<div class="it"><span><b>${esc(x.t?x.t.pseudo:"Joueur")}</b> · ${({pending:"en attente…",accepted:"a accepté ✓",declined:"a refusé",cancelled:"annulée"})[x.status]||x.status}</span>${x.status=="pending"?`<button class="mini n" data-k="can" data-id="${x.id}">Annuler</button>`:""}</div>`).join("")}</div>`:""}`;
 else if(v=="fr"){const fl=OL.fr||[],mid=me.id,acc=fl.filter(x=>x.status=="accepted"),rq=fl.filter(x=>x.status=="pending"&&x.to_id==mid),sn=fl.filter(x=>x.status=="pending"&&x.from_id==mid),who=x=>x.from_id==mid?x.t:x.f,on=p=>!!(p&&p.last_seen&&Date.now()-new Date(p.last_seen).getTime()<18e4);
 h=head("Amis","go-hub")+`<div class="cd"><label class="lb" for="olf">Ajouter un ami</label><input class="in" id="olf" maxlength="9" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="TIQ-7K2M9"><div class="msg" id="olm"></div><button class="pk g" data-k="addf">Ajouter</button></div>`
@@ -530,7 +531,7 @@ const to=f.data[0];
 if(OL.sent.some(x=>x.to_id==to.id&&x.status=="pending")){OL.busy=false;return olMsg("Tu l’as déjà défié : attends sa réponse.")}
 const r=await sb.from("invitations").insert({from_id:OL.me.id,to_id:to.id});
 if(r.error){OL.busy=false;return olMsg("Envoi impossible : "+r.error.message)}
-OL.busy=false;OL.msg="Invitation envoyée à "+to.pseudo+" !";OL.ok=1;$("olc2").value="";await olLoad();olRender()}
+OL.busy=false;OL.msg="Invitation envoyée à "+to.pseudo+" ! Reste en ligne jusqu’à sa réponse.";OL.ok=1;$("olc2").value="";await olLoad();olRender()}
 catch(e){OL.busy=false;olMsg(olErr(e.message))}}
 async function olSet(id,st){OL.busy=true;
 if(st=="accepted"){const a=await sb.rpc("accepter_invitation",{p_id:id});OL.busy=false;if(a.error)return olToast("Action impossible : "+a.error.message);await olLoad();return olPlay(a.data)}
@@ -539,7 +540,7 @@ if(r.error)return olToast("Action impossible : "+r.error.message);
 if(st=="accepted")olToast("Défi accepté ! La partie en ligne arrive bientôt.");
 await olLoad()}
 function olStopG(){if(ON){if(ON.ch){try{sb.removeChannel(ON.ch)}catch(e){}}clearInterval(ON.tm);clearInterval(ON.pt)}}
-async function olPlay(gid){if(!sb||!OL.me)return;
+async function olPlay(gid){if(!sb||!OL.me||(ON&&ON.id==gid))return;
 const r=await sb.from("games").select("*").eq("id",gid).maybeSingle();
 if(!r.data)return olToast("Partie introuvable.");
 const g=r.data,q=await sb.from("profiles").select("id,pseudo").in("id",[g.black_id,g.red_id]),nm={};
@@ -549,12 +550,12 @@ ON={id:g.id,my:g.black_id==OL.me.id?1:2,n:g.move_no,nm:["",nm[g.black_id]||"Noir
 MUS.pause();ambStart();sess++;mode=0;lv=0;s=g.state;sel=-1;pend=null;over=g.winner||0;anim=null;busy=false;
 document.body.classList.add("onl");olEl.hidden=true;$("menu").hidden=true;$("game").hidden=false;$("pm").hidden=true;draw();
 ON.ch=sb.channel("g-"+g.id).on("postgres_changes",{event:"UPDATE",schema:"public",table:"games",filter:"id=eq."+g.id},p=>olGame(p.new)).subscribe();
-ON.tm=setInterval(olSync,4000);ON.pt=setInterval(olPres,5000);olPres()}
+ON.tm=setInterval(olSync,4000);ON.pt=setInterval(olPres,5000);olPres();try{localStorage.setItem("tiq7g",g.id)}catch(e){}}
 function olGame(g){if(!ON||!g||g.id!=ON.id)return;
 if(g.next_id&&!ON.nx){ON.nx=g.next_id;draw()}
 if(g.move_no<=ON.n)return;
 const m=g.last_move,nx=g.move_no==ON.n+1;ON.n=g.move_no;
-if(m&&m.ab){over=g.winner||0;ON.left=over==ON.my;sel=-1;pend=null;draw();if(over)snd(520,.4);return}
+if(m&&m.ab){over=g.winner||0;ON.left=over==ON.my;ON.ab=m.r?2:1;sel=-1;pend=null;draw();if(over)snd(520,.4);return}
 if(nx&&m&&s.t==m.p)olRemote(m);
 else{s=g.state;over=g.winner||0;sel=-1;pend=null;anim=null;busy=false;draw()}}
 async function olSync(){if(!ON||!sb)return;const r=await sb.from("games").select("*").eq("id",ON.id).maybeSingle();if(r.data)olGame(r.data)}
@@ -591,11 +592,24 @@ const r=await sb.rpc("presence_partie",{p_id:O.id});if(ON===O&&r.data===true)olS
 function olResult(){if(!ON||!over)return;const w=over==ON.my,gr=$("gr");
 gr.className="ov "+(w?"w":"l");
 gr.querySelector("h3").textContent=ON.left?"Adversaire parti":w?"Vainqueur":"Défaite";
-gr.querySelector("p").textContent=ON.left?"Ton adversaire a quitté la partie.":w?"Bravo, tu as battu "+ON.nm[3-ON.my]+" !":ON.nm[over]+" remporte la partie.";
+gr.querySelector("p").textContent=ON.left?"Ton adversaire a quitté la partie.":ON.ab==1?"Tu as dépassé les 40 secondes d’attente.":ON.ab==2?"Tu as quitté la partie.":w?"Bravo, tu as battu "+ON.nm[3-ON.my]+" !":ON.nm[over]+" remporte la partie.";
 gr.hidden=false}
-function olBack(){$("gr").hidden=true;olLeave();olEl.hidden=false;OL.view="hub";OL.msg="";olRender()}
+function olBack(){try{localStorage.removeItem("tiq7g")}catch(e){}$("gr").hidden=true;olLeave();olEl.hidden=false;OL.view="hub";OL.msg="";olRender()}
 document.body.insertAdjacentHTML("beforeend",'<div id="gr" class="ov" hidden><div class="cd"><h3></h3><p></p><button class="pk g" id="gk">OK</button></div></div>');
 $("gk").onclick=olBack;
+function olNote(t,p){const gr=$("gr");gr.className="ov l";gr.querySelector("h3").textContent=t;gr.querySelector("p").textContent=p;gr.hidden=false}
+async function olResume(){if(ON||OL.pl||!$("game").hidden)return;OL.pl=1;
+try{let sg=null;try{sg=localStorage.getItem("tiq7g")}catch(e){}
+if(OL.game){await olPlay(OL.game.id);return}
+if(!sg)return;
+const r=await sb.from("games").select("winner,last_move,black_id,red_id").eq("id",sg).maybeSingle();
+try{localStorage.removeItem("tiq7g")}catch(e){}
+const g=r.data;if(!g||!g.winner||!g.last_move||!g.last_move.ab)return;
+const my=g.black_id==OL.me.id?1:2;if(g.winner==my)return;
+olNote("Défaite",g.last_move.r?"Tu as quitté la partie : tu as perdu.":"Tu as dépassé les 40 secondes d’attente.")}
+catch(e){}finally{OL.pl=0}}
+function olOn(p){return !!(p&&p.last_seen&&Date.now()-new Date(p.last_seen).getTime()<15e4)}
+addEventListener("pagehide",()=>{if(!OL.tok)return;try{fetch(SBURL+"/rest/v1/rpc/hors_ligne",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json",apikey:SBKEY,Authorization:"Bearer "+OL.tok},body:"{}"})}catch(e){}});
 document.addEventListener("visibilitychange",()=>{if(!document.hidden&&ON&&!over){olPres();olSync()}});
 olEl.onclick=async e=>{const b=e.target.closest("[data-k]");if(!b||OL.busy)return;const k=b.dataset.k;
 if(k=="close"){olEl.hidden=true;return}
