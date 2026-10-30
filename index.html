@@ -160,6 +160,15 @@ body.onl #pz,body.onl #sn{display:none}
 #gr .pk{width:100%;margin:0;font-family:"Lilita One","Arial Rounded MT Bold",system-ui,sans-serif}
 #gr.w h3{color:#2d5a12}
 #gr.l h3{color:#8a1c14}
+.hd{position:relative}
+#rx{width:46px;height:46px;padding:0;display:none;place-items:center;margin-left:6px;border:3px solid #6b4a2a;border-radius:12px;background:linear-gradient(#f6dca2,#dcb06c);box-shadow:0 4px 0 #6b4a2a,inset 0 3px 0 rgba(255,255,255,.5);cursor:pointer;font-size:24px;line-height:1}
+#rx:active{transform:translateY(3px);box-shadow:0 1px 0 #6b4a2a}
+body.onl #rx{display:grid}
+#rp{position:absolute;right:10px;top:calc(100% + 6px);z-index:14;display:flex;gap:4px;padding:8px;background:linear-gradient(#f6dca2,#dcb06c);border:4px solid #6b4a2a;border-radius:14px;box-shadow:0 6px 0 #6b4a2a}
+#rp button{width:44px;height:44px;padding:0;border:0;background:none;font-size:28px;line-height:1;cursor:pointer}
+#rp button:active{transform:scale(1.2)}
+.rxb{position:fixed;z-index:15;min-width:72px;padding:6px 14px;text-align:center;font-size:44px;line-height:1.1;background:rgba(246,220,162,.95);border:4px solid #6b4a2a;border-radius:18px;box-shadow:0 5px 0 #6b4a2a;pointer-events:none;transform:translate(-50%,-50%);animation:rxp 2s ease-out forwards}
+@keyframes rxp{0%{transform:translate(-50%,-50%) scale(.3);opacity:0}12%{transform:translate(-50%,-50%) scale(1.25);opacity:1}25%{transform:translate(-50%,-50%) scale(1)}85%{opacity:1}100%{transform:translate(-50%,-62%) scale(1);opacity:0}}
 @supports(height:1dvh){#ol{--v:1dvh}}
 #ol .scene{position:fixed;inset:0;width:100%;height:100%;max-height:none;filter:none;touch-action:auto;z-index:0}
 .olw{position:relative;z-index:1}
@@ -549,7 +558,7 @@ olStopG();
 ON={id:g.id,my:g.black_id==OL.me.id?1:2,n:g.move_no,nm:["",nm[g.black_id]||"Noir",nm[g.red_id]||"Rouge"],nx:g.next_id,ch:null,tm:null};
 MUS.pause();ambStart();sess++;mode=0;lv=0;s=g.state;sel=-1;pend=null;over=g.winner||0;anim=null;busy=false;
 document.body.classList.add("onl");olEl.hidden=true;$("menu").hidden=true;$("game").hidden=false;$("pm").hidden=true;draw();
-ON.ch=sb.channel("g-"+g.id).on("postgres_changes",{event:"UPDATE",schema:"public",table:"games",filter:"id=eq."+g.id},p=>olGame(p.new)).subscribe();
+ON.ch=sb.channel("g-"+g.id).on("postgres_changes",{event:"UPDATE",schema:"public",table:"games",filter:"id=eq."+g.id},p=>olGame(p.new)).on("broadcast",{event:"emo"},m=>olEmo(m.payload)).subscribe();
 ON.tm=setInterval(olSync,4000);ON.pt=setInterval(olPres,5000);olPres();try{localStorage.setItem("tiq7g",g.id)}catch(e){}}
 function olGame(g){if(!ON||!g||g.id!=ON.id)return;
 if(g.next_id&&!ON.nx){ON.nx=g.next_id;draw()}
@@ -597,6 +606,19 @@ gr.hidden=false}
 function olBack(){try{localStorage.removeItem("tiq7g")}catch(e){}$("gr").hidden=true;olLeave();olEl.hidden=false;OL.view="hub";OL.msg="";olRender()}
 document.body.insertAdjacentHTML("beforeend",'<div id="gr" class="ov" hidden><div class="cd"><h3></h3><p></p><button class="pk g" id="gk">OK</button></div></div>');
 $("gk").onclick=olBack;
+const ER=["👏","😮","😅","😂","🤔","🤝"];
+(function(){const hd=document.querySelector(".hd"),b=document.createElement("button");b.id="rx";b.setAttribute("aria-label","Réactions");b.textContent="😊";hd.appendChild(b);
+const p=document.createElement("div");p.id="rp";p.hidden=true;p.innerHTML=ER.map(e=>`<button data-e="${e}">${e}</button>`).join("");hd.appendChild(p);
+b.onclick=ev=>{ev.stopPropagation();p.hidden=!p.hidden};
+p.onclick=ev=>{const t=ev.target.closest("button");if(!t)return;ev.stopPropagation();p.hidden=true;olSendE(t.dataset.e)};
+document.addEventListener("click",()=>{p.hidden=true})})();
+function olSendE(e){if(!ON||!ER.includes(e)||Date.now()-(ON.rl||0)<3000)return;ON.rl=Date.now();
+try{ON.ch.send({type:"broadcast",event:"emo",payload:{p:ON.my,e}})}catch(x){}
+olShowE(ON.my,e)}
+function olEmo(d){if(!ON||!d||!ER.includes(d.e)||d.p!=3-ON.my||Date.now()-(ON.rr||0)<2000)return;ON.rr=Date.now();olShowE(d.p,d.e)}
+function olShowE(p,e){const sv=$("bd").querySelector("svg");if(!sv)return;
+const pt=sv.createSVGPoint();pt.x=350;pt.y=(p==2?10:840)+45;const c=pt.matrixTransform(sv.getScreenCTM());
+const d=document.createElement("div");d.className="rxb";d.textContent=e;d.style.left=c.x+"px";d.style.top=c.y+"px";document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
 function olNote(t,p){const gr=$("gr");gr.className="ov l";gr.querySelector("h3").textContent=t;gr.querySelector("p").textContent=p;gr.hidden=false}
 async function olResume(){if(ON||OL.pl||!$("game").hidden)return;OL.pl=1;
 try{let sg=null;try{sg=localStorage.getItem("tiq7g")}catch(e){}
