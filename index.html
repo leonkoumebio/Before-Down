@@ -160,14 +160,25 @@ body.onl #pz,body.onl #sn{display:none}
 #gr .pk{width:100%;margin:0;font-family:"Lilita One","Arial Rounded MT Bold",system-ui,sans-serif}
 #gr.w h3{color:#2d5a12}
 #gr.l h3{color:#8a1c14}
+#sp{cursor:pointer}
+#sc{position:fixed;z-index:17}
+#sc .cd{width:min(86%,320px);text-align:center}
+#sc h3{margin:0 0 10px;font-size:30px}
+#sc .srk{font:400 40px "Lilita One",sans-serif;color:#8a1c14;line-height:1.1}
+#sc .sbg{font:400 56px "Lilita One",sans-serif;color:#2d5a12;line-height:1.1;margin-top:6px}
+#sc .slb{font:700 13px Nunito,system-ui,sans-serif;letter-spacing:1px;text-transform:uppercase;color:#6b4a2a}
+#sc .sbar{height:14px;margin:14px 0 8px;border:3px solid #6b4a2a;border-radius:9px;background:#fff7e6;overflow:hidden}
+#sc .sbar i{display:block;height:100%;background:linear-gradient(#d6e060,#9bb531)}
+#sc .snt{margin:0 0 8px;font:700 14px Nunito,system-ui,sans-serif}
+#sc .pk{width:100%;margin:10px 0 0;font-family:"Lilita One","Arial Rounded MT Bold",system-ui,sans-serif}
 .hd{position:relative}
-#rx{width:46px;height:46px;padding:0;display:none;place-items:center;margin-left:6px;border:3px solid #6b4a2a;border-radius:12px;background:linear-gradient(#f6dca2,#dcb06c);box-shadow:0 4px 0 #6b4a2a,inset 0 3px 0 rgba(255,255,255,.5);cursor:pointer;font-size:24px;line-height:1}
-#rx:active{transform:translateY(3px);box-shadow:0 1px 0 #6b4a2a}
+#rx{width:46px;height:46px;padding:0;display:none;place-items:center;margin-left:6px;border:0;background:none;box-shadow:none;cursor:pointer;font-size:32px;line-height:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5))}
+#rx:active{transform:scale(1.2)}
 body.onl #rx{display:grid}
-#rp{position:absolute;right:10px;top:calc(100% + 6px);z-index:14;display:flex;gap:4px;padding:8px;background:linear-gradient(#f6dca2,#dcb06c);border:4px solid #6b4a2a;border-radius:14px;box-shadow:0 6px 0 #6b4a2a}
+#rp{position:absolute;right:10px;top:calc(100% + 6px);z-index:14;display:flex;gap:4px;padding:4px;background:none;border:0;box-shadow:none;filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))}
 #rp button{width:44px;height:44px;padding:0;border:0;background:none;font-size:28px;line-height:1;cursor:pointer}
 #rp button:active{transform:scale(1.2)}
-.rxb{position:fixed;z-index:15;min-width:72px;padding:6px 14px;text-align:center;font-size:44px;line-height:1.1;background:rgba(246,220,162,.95);border:4px solid #6b4a2a;border-radius:18px;box-shadow:0 5px 0 #6b4a2a;pointer-events:none;transform:translate(-50%,-50%);animation:rxp 2s ease-out forwards}
+.rxb{position:fixed;z-index:15;text-align:center;font-size:72px;line-height:1;pointer-events:none;transform:translate(-50%,-50%);filter:drop-shadow(0 4px 6px rgba(0,0,0,.45));animation:rxp 2s ease-out forwards}
 @keyframes rxp{0%{transform:translate(-50%,-50%) scale(.3);opacity:0}12%{transform:translate(-50%,-50%) scale(1.25);opacity:1}25%{transform:translate(-50%,-50%) scale(1)}85%{opacity:1}100%{transform:translate(-50%,-62%) scale(1);opacity:0}}
 @supports(height:1dvh){#ol{--v:1dvh}}
 #ol .scene{position:fixed;inset:0;width:100%;height:100%;max-height:none;filter:none;touch-action:auto;z-index:0}
@@ -299,7 +310,7 @@ function play(m,rm){busy=false;const p=s.t,had=!!pend;
 anim={f:(had||dragged)?-2:m.f,t:m.t,c:m.c,v:3-p,p,sl:m.f<0?s.h[p]-1:-1};
 s=app(s,m);sel=-1;pend=null;pion();
 if(m.c>=0){setTimeout(()=>snd(80,.3),150);try{navigator.vibrate&&navigator.vibrate(60)}catch(e){}}
-over=win(s);if(over)setTimeout(()=>snd(520,.4),300);if((over==1&&mode)||(ON&&over==ON.my))addWin();if(ON&&!rm)olPush(m,p);draw();nextTurn()}
+over=win(s);if(over)setTimeout(()=>snd(520,.4),300);if(over==1&&mode&&lv>1)addWin();if(ON&&!rm)olPush(m,p);draw();nextTurn()}
 function choose(ms,f,t){if(ms[0].c<0)play(ms[0]);else{anim={f:dragged?-2:f,t,c:-1,p:s.t,sl:f<0?s.h[s.t]-1:-1};pend={f,t};draw()}}
 function click(n){if(over||busy||(mode&&s.t==2)||(ON&&s.t!=ON.my))return;const L=gen(s);
 if(pend){const m=L.find(m=>m.f==pend.f&&m.t==pend.t&&m.c==n);if(m)play(m);return}
@@ -383,9 +394,12 @@ $("br").onclick=()=>start(mode,lv);
 $("bs").onclick=()=>{mute=!mute;$("bs").classList.toggle("off",mute)};
 $("bm").onclick=()=>{sess++;busy=false;$("game").hidden=true;$("menu").hidden=false};
 let LV=2;try{LV=+localStorage.getItem("tiq7lv")||2}catch(e){}
-function wins(){try{return +localStorage.getItem("tiq7w")||0}catch(e){return 0}}
-function addWin(){try{localStorage.setItem("tiq7w",wins()+1)}catch(e){}refresh()}
-function rank(w){return w>=25?"Légende":w>=10?"Maître":w>=3?"Stratège":"Novice"}
+function lw(){try{return +localStorage.getItem("tiq7w")||0}catch(e){return 0}}
+function ow(){try{return +localStorage.getItem("tiq7wo")||0}catch(e){return 0}}
+function wins(){return lw()+ow()}
+function addWin(){try{localStorage.setItem("tiq7w",lw()+1)}catch(e){}refresh()}
+const RK=[["Novice",0],["Apprenti",5],["Stratège",15],["Expert",35],["Maître",70],["Grand Maître",130],["Légende",250]];
+function rank(w){let r=RK[0][0];for(const k of RK)if(w>=k[1])r=k[0];return r}
 function refresh(){const w=wins();$("sp").textContent=`Statut : ${rank(w)} · ★ ${w}`;document.querySelectorAll(".ch").forEach(b=>b.classList.toggle("on",+b.dataset.l==LV));$("snm").classList.toggle("off",mute);if($("sn"))$("sn").classList.toggle("off",mute)}
 function toast(t){const e=$("ts");e.textContent=t;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),1800)}
 document.querySelectorAll(".ch").forEach(b=>b.onclick=()=>start(1,+b.dataset.l));
@@ -468,7 +482,7 @@ else{OL.view="auth";try{OL.tab=localStorage.getItem("tiq7acc")?"in":"new"}catch(
 catch(e){OL.view="err"}
 olRender()}
 async function olMe(id){const r=await sb.from("profiles").select("id,pseudo,code").eq("id",id).maybeSingle();
-if(r.data){OL.me=r.data;OL.view="hub";olStart();await olLoad();return true}
+if(r.data){OL.me=r.data;OL.view="hub";olStart();olFetchStats();await olLoad();return true}
 else{await sb.auth.signOut();OL.me=null;OL.view="auth";OL.tab="in";OL.ok=0;OL.msg=r.error?"Profil illisible : "+r.error.message:"Compte trouvé mais profil introuvable (problème côté Supabase).";return false}}
 function olStart(){if(!OL.ch)OL.ch=sb.channel("inv-"+OL.me.id).on("postgres_changes",{event:"*",schema:"public",table:"invitations"},()=>olLoad()).on("postgres_changes",{event:"*",schema:"public",table:"friendships"},()=>olLoad()).subscribe();
 if(!OL.tm)OL.tm=setInterval(()=>{if(!olEl.hidden)olLoad()},8000);if(!OL.hb){olPing();OL.hb=setInterval(olPing,60000)}}
@@ -508,7 +522,7 @@ else if(v=="hub")h=`<div class="olh"><button class="wb" data-k="close" aria-labe
 <button class="pk" data-k="go-fr">Amis${fn?`<i class="bdg">${fn}</i>`:""}</button>
 <button class="pk s" data-k="go-code">Mon code</button>
 <button class="lnk" data-k="out">Se déconnecter</button>`;
-else if(v=="inv")h=head("Invitations","go-hub")+`<div class="cd">${n?OL.inv.map(x=>`<div class="it"><span><i class="dot${olOn(x.f)?" on":""}"></i><b>${esc(x.f?x.f.pseudo:"Joueur")}</b> te défie !${olOn(x.f)?"":"<br><small>Hors ligne : attends son retour.</small>"}</span>${olOn(x.f)?`<button class="mini" data-k="acc" data-id="${x.id}">Accepter</button>`:""}<button class="mini r" data-k="dec" data-id="${x.id}">Refuser</button></div>`).join(""):"<p>Aucune invitation pour le moment.</p>"}</div>`;
+else if(v=="inv")h=head("Invitations","go-hub")+`<div class="cd">${n?OL.inv.slice().reverse().map(x=>`<div class="it"><span><i class="dot${olOn(x.f)?" on":""}"></i><b>${esc(x.f?x.f.pseudo:"Joueur")}</b> te défie !${olOn(x.f)?"":"<br><small>Hors ligne : attends son retour.</small>"}</span>${olOn(x.f)?`<button class="mini" data-k="acc" data-id="${x.id}">Accepter</button>`:""}<button class="mini r" data-k="dec" data-id="${x.id}">Refuser</button></div>`).join(""):"<p>Aucune invitation pour le moment.</p>"}</div>`;
 else if(v=="def")h=head("Défier un joueur","go-hub")+`<div class="cd"><label class="lb" for="olc2">Code du joueur</label><input class="in" id="olc2" maxlength="9" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="TIQ-7K2M9"><div class="msg" id="olm"></div><button class="pk g" data-k="send">Envoyer l’invitation</button></div>${OL.sent.length?`<div class="cd"><h3>Mes invitations</h3>${OL.sent.map(x=>`<div class="it"><span><b>${esc(x.t?x.t.pseudo:"Joueur")}</b> · ${({pending:"en attente…",accepted:"a accepté ✓",declined:"a refusé",cancelled:"annulée"})[x.status]||x.status}</span>${x.status=="pending"?`<button class="mini n" data-k="can" data-id="${x.id}">Annuler</button>`:""}</div>`).join("")}</div>`:""}`;
 else if(v=="fr"){const fl=OL.fr||[],mid=me.id,acc=fl.filter(x=>x.status=="accepted"),rq=fl.filter(x=>x.status=="pending"&&x.to_id==mid),sn=fl.filter(x=>x.status=="pending"&&x.from_id==mid),who=x=>x.from_id==mid?x.t:x.f,on=p=>!!(p&&p.last_seen&&Date.now()-new Date(p.last_seen).getTime()<18e4);
 h=head("Amis","go-hub")+`<div class="cd"><label class="lb" for="olf">Ajouter un ami</label><input class="in" id="olf" maxlength="9" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="TIQ-7K2M9"><div class="msg" id="olm"></div><button class="pk g" data-k="addf">Ajouter</button></div>`
@@ -598,7 +612,7 @@ setTimeout(()=>{if(k!=sess||!ON||!pend||pend.t!=mv.t||pend.f!=mv.f)return;play(m
 addEventListener("pagehide",()=>{if(!ON||over||!OL.tok)return;try{fetch(SBURL+"/rest/v1/rpc/abandonner",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json",apikey:SBKEY,Authorization:"Bearer "+OL.tok},body:JSON.stringify({p_id:ON.id})})}catch(e){}});
 async function olPres(){if(!ON||over||document.hidden||!sb)return;const O=ON;
 const r=await sb.rpc("presence_partie",{p_id:O.id});if(ON===O&&r.data===true)olSync()}
-function olResult(){if(!ON||!over)return;const w=over==ON.my,gr=$("gr");
+function olResult(){if(!ON||!over)return;olRec();const w=over==ON.my,gr=$("gr");
 gr.className="ov "+(w?"w":"l");
 gr.querySelector("h3").textContent=ON.left?"Adversaire parti":w?"Vainqueur":"Défaite";
 gr.querySelector("p").textContent=ON.left?"Ton adversaire a quitté la partie.":ON.ab==1?"Tu as dépassé les 40 secondes d’attente.":ON.ab==2?"Tu as quitté la partie.":w?"Bravo, tu as battu "+ON.nm[3-ON.my]+" !":ON.nm[over]+" remporte la partie.";
@@ -606,6 +620,14 @@ gr.hidden=false}
 function olBack(){try{localStorage.removeItem("tiq7g")}catch(e){}$("gr").hidden=true;olLeave();olEl.hidden=false;OL.view="hub";OL.msg="";olRender()}
 document.body.insertAdjacentHTML("beforeend",'<div id="gr" class="ov" hidden><div class="cd"><h3></h3><p></p><button class="pk g" id="gk">OK</button></div></div>');
 $("gk").onclick=olBack;
+function olSetOw(n){try{localStorage.setItem("tiq7wo",n)}catch(e){}refresh()}
+async function olFetchStats(){const r=await sb.from("stats").select("wins_online").eq("user_id",OL.me.id).maybeSingle();if(r.error)return;olSetOw(r.data?r.data.wins_online:0)}
+function olRec(){const O=ON;sb.rpc("enregistrer_fin_partie",{p_id:O.id}).then(r=>{if(r.data&&typeof r.data.wins_online=="number")olSetOw(r.data.wins_online)},()=>{})}
+document.body.insertAdjacentHTML("beforeend",'<div id="sc" class="ov" hidden><div class="cd"></div></div>');
+function stOpen(){const w=wins(),i=RK.reduce((a,k,j)=>w>=k[1]?j:a,0),nx=RK[i+1],lo=RK[i][1],pct=nx?Math.round((w-lo)/(nx[1]-lo)*100):100,rest=nx?nx[1]-w:0;
+$("sc").querySelector(".cd").innerHTML=`<h3>Statistiques</h3><div class="slb">Rang</div><div class="srk">${RK[i][0]}</div><div class="slb" style="margin-top:10px">Victoires</div><div class="sbg">${w}</div><div class="sbar"><i style="width:${pct}%"></i></div><p class="snt">${nx?"Encore "+rest+" victoire"+(rest>1?"s":"")+" pour devenir "+nx[0]+".":"Rang maximum atteint !"}</p><p class="snt">En ligne : ${ow()} · Contre l’ordinateur : ${lw()}</p><button class="pk g" id="scx">OK</button>`;
+$("scx").onclick=()=>{$("sc").hidden=true};$("sc").hidden=false}
+$("sp").onclick=stOpen;
 const ER=["👏","😮","😅","😂","🤔","🤝"];
 (function(){const hd=document.querySelector(".hd"),b=document.createElement("button");b.id="rx";b.setAttribute("aria-label","Réactions");b.textContent="😊";hd.appendChild(b);
 const p=document.createElement("div");p.id="rp";p.hidden=true;p.innerHTML=ER.map(e=>`<button data-e="${e}">${e}</button>`).join("");hd.appendChild(p);
@@ -617,7 +639,7 @@ try{ON.ch.send({type:"broadcast",event:"emo",payload:{p:ON.my,e}})}catch(x){}
 olShowE(ON.my,e)}
 function olEmo(d){if(!ON||!d||!ER.includes(d.e)||d.p!=3-ON.my||Date.now()-(ON.rr||0)<2000)return;ON.rr=Date.now();olShowE(d.p,d.e)}
 function olShowE(p,e){const sv=$("bd").querySelector("svg");if(!sv)return;
-const pt=sv.createSVGPoint();pt.x=350;pt.y=(p==2?10:840)+45;const c=pt.matrixTransform(sv.getScreenCTM());
+const pt=sv.createSVGPoint();pt.x=350;pt.y=470;const c=pt.matrixTransform(sv.getScreenCTM());
 const d=document.createElement("div");d.className="rxb";d.textContent=e;d.style.left=c.x+"px";d.style.top=c.y+"px";document.body.appendChild(d);setTimeout(()=>d.remove(),2000)}
 function olNote(t,p){const gr=$("gr");gr.className="ov l";gr.querySelector("h3").textContent=t;gr.querySelector("p").textContent=p;gr.hidden=false}
 async function olResume(){if(ON||OL.pl||!$("game").hidden)return;OL.pl=1;
