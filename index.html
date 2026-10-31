@@ -149,6 +149,7 @@ main{height:100%;box-sizing:border-box}
 .lnk{display:block;margin:10px auto 0;background:none;border:0;font:inherit;font-size:17px;color:#fff6e0;text-shadow:0 2px 0 #2a140a,0 0 8px rgba(0,0,0,.5);text-decoration:underline;cursor:pointer}
 #olt{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);transform:translateX(-50%);z-index:5;max-width:88%;padding:10px 18px;border-radius:999px;background:#2a140a;color:#ffe9a8;border:3px solid #d9ad5e;font-size:16px;text-align:center;opacity:0;transition:opacity .3s;pointer-events:none}
 #olt.on{opacity:1}
+.olload{position:fixed;left:0;right:0;bottom:calc(var(--v)*18);text-align:center;font-size:clamp(17px,calc(var(--v)*3.4),24px);letter-spacing:2px;color:#fff6e0;text-shadow:0 2px 0 #2a140a,0 0 14px rgba(0,0,0,.55);animation:s0p 1.8s ease-in-out infinite}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#9a8f80;margin-right:8px;vertical-align:1px}
 .dot.on{background:#2fbf4a;box-shadow:0 0 0 2px #fff7e6,0 0 6px #2fbf4a}
 .dot:not(.on){display:none}
@@ -171,6 +172,17 @@ body.onl #pz,body.onl #sn{display:none}
 #sc .sbar i{display:block;height:100%;background:linear-gradient(#d6e060,#9bb531)}
 #sc .snt{margin:0 0 8px;font:700 14px Nunito,system-ui,sans-serif}
 #sc .pk{width:100%;margin:10px 0 0;font-family:"Lilita One","Arial Rounded MT Bold",system-ui,sans-serif}
+#sc .cd{max-height:calc(100vh - 40px);max-height:calc(100dvh - 40px);overflow-y:auto}
+#sc .sgr{display:flex;flex-wrap:wrap;justify-content:space-around;align-items:flex-end;gap:6px 14px}
+#sc .srk{font-size:30px}
+#sc .sbg{font-size:44px;margin-top:0}
+#sc .slist{margin:12px 0 4px;border:3px solid #6b4a2a;border-radius:10px;background:#fff7e6;overflow:hidden;text-align:left}
+#sc .srw{display:flex;justify-content:space-between;gap:8px;padding:6px 10px;font:700 14px Nunito,system-ui,sans-serif;border-top:2px solid rgba(107,74,42,.25)}
+#sc .srw:first-child{border-top:0}
+#sc .srw.dn{opacity:.55}
+#sc .srw.nw{background:#ffce00}
+#sc .sgr{align-items:flex-start}
+#sc .srk,#sc .sbg{line-height:48px}
 .hd{position:relative}
 #rx{width:46px;height:46px;padding:0;display:none;place-items:center;margin-left:6px;border:0;background:none;box-shadow:none;cursor:pointer;font-size:32px;line-height:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5))}
 #rx:active{transform:scale(1.2)}
@@ -180,6 +192,17 @@ body.onl #rx{display:grid}
 #rp button:active{transform:scale(1.2)}
 .rxb{position:fixed;z-index:15;text-align:center;font-size:72px;line-height:1;pointer-events:none;transform:translate(-50%,-50%);filter:drop-shadow(0 4px 6px rgba(0,0,0,.45));animation:rxp 2s ease-out forwards}
 @keyframes rxp{0%{transform:translate(-50%,-50%) scale(.3);opacity:0}12%{transform:translate(-50%,-50%) scale(1.25);opacity:1}25%{transform:translate(-50%,-50%) scale(1)}85%{opacity:1}100%{transform:translate(-50%,-62%) scale(1);opacity:0}}
+.wcd{text-align:center;padding:12px 14px}
+.orb{position:relative;width:84px;height:36px;margin:0 auto 6px}
+.orb i{position:absolute;left:31px;top:7px;width:22px;height:22px;border-radius:50%;border:2px solid rgba(0,0,0,.55);box-sizing:border-box;animation:orb .9s linear infinite}
+.orb i::after{content:"";position:absolute;left:4px;top:3px;width:8px;height:4px;border-radius:50%;background:#fff;opacity:.3}
+.orb .o1{background:radial-gradient(circle at 35% 30%,#5a3a36,#1a0000 60%,#000)}
+.orb .o2{background:radial-gradient(circle at 35% 30%,#e86a6a,#a82424 60%,#5c0f0f);animation-delay:-.45s}
+@keyframes orb{0%{transform:translate(28px,0) scale(1);z-index:1;filter:brightness(1)}12.5%{transform:translate(19.8px,3.5px) scale(1.15);z-index:2;filter:brightness(1)}25%{transform:translate(0,5px) scale(1.25);z-index:2;filter:brightness(1)}37.5%{transform:translate(-19.8px,3.5px) scale(1.15);z-index:2;filter:brightness(1)}50%{transform:translate(-28px,0) scale(1);z-index:1;filter:brightness(1)}62.5%{transform:translate(-19.8px,-3.5px) scale(.85);z-index:0;filter:brightness(.75)}75%{transform:translate(0,-5px) scale(.75);z-index:0;filter:brightness(.7)}87.5%{transform:translate(19.8px,-3.5px) scale(.85);z-index:0;filter:brightness(.75)}100%{transform:translate(28px,0) scale(1);z-index:1;filter:brightness(1)}}
+.wtx{font-family:"Lilita One","Arial Rounded MT Bold",system-ui,sans-serif;font-size:18px;letter-spacing:.5px;color:#4a2c12}
+.wnm{font:700 15px Nunito,system-ui,sans-serif;color:#6b4a2a;margin-top:2px}
+.wcn{display:block;margin:12px auto 2px;padding:7px 20px 6px;font-family:"Lilita One","Arial Rounded MT Bold",system-ui,sans-serif;font-size:15px;letter-spacing:.5px;text-transform:uppercase;color:#fff;cursor:pointer;border:3px solid #4a1512;border-radius:10px;background:linear-gradient(#d9503c,#a52a22);box-shadow:0 4px 0 #4a1512,inset 0 3px 0 rgba(255,255,255,.35)}
+.wcn:active{transform:translateY(3px);box-shadow:0 1px 0 #4a1512,inset 0 3px 0 rgba(255,255,255,.35)}
 @supports(height:1dvh){#ol{--v:1dvh}}
 #ol .scene{position:fixed;inset:0;width:100%;height:100%;max-height:none;filter:none;touch-action:auto;z-index:0}
 .olw{position:relative;z-index:1}
@@ -230,7 +253,7 @@ body.onl #rx{display:grid}
 <div class="cbs">
 <button class="cb" id="shr" style="background:#e9d9c4" aria-label="Partager"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.6 10.6L15.4 7.4M8.6 13.4L15.4 16.6"/></svg></button>
 <button class="cb" id="tro" style="background:#f0c070" aria-label="Succès"><svg viewBox="0 0 24 24"><path d="M7 4h10v5a5 5 0 01-10 0zM7 6H4v2a3 3 0 003 3M17 6h3v2a3 3 0 01-3 3M12 14v4M8 20h8"/></svg></button>
-<button class="cb" id="pod" style="background:#a8c8b0" aria-label="Classement"><svg viewBox="0 0 24 24"><path d="M3 20V13h6v7M9 20V8h6v12M15 20v-9h6v9M3 20h18"/></svg></button>
+<button class="cb" id="pod" style="background:#a8c8b0" aria-label="Statistiques"><svg viewBox="0 0 24 24"><path d="M3 20V13h6v7M9 20V8h6v12M15 20v-9h6v9M3 20h18"/></svg></button>
 <button class="cb" id="snm" style="background:#c9d64a" aria-label="Son"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zM16 9a4 4 0 010 6M18.5 6.5a8 8 0 010 11"/></svg></button>
 </div></div>
 <div class="ov" id="rl" hidden><div class="cd"><h3>Règles</h3><ul>
@@ -406,7 +429,7 @@ document.querySelectorAll(".ch").forEach(b=>b.onclick=()=>start(1,+b.dataset.l))
 $("two").onclick=()=>start(0,0);
 $("shr").onclick=()=>{const d={title:"T·IQ+7",text:"A Game of Challenge",url:location.href};if(navigator.share)navigator.share(d).catch(()=>{});else try{navigator.clipboard.writeText(location.href).then(()=>toast("Lien copié"))}catch(e){}};
 $("tro").onclick=()=>toast("Succès : bientôt");
-$("pod").onclick=()=>toast("Classement : bientôt");
+$("pod").onclick=()=>stOpen();
 $("snm").onclick=()=>{mute=!mute;$("bs").classList.toggle("off",mute);refresh()};
 $("hlp").onclick=()=>{$("rl").hidden=false};
 $("rlx").onclick=()=>{$("rl").hidden=true};
@@ -426,7 +449,7 @@ $("bs").addEventListener("click",musicSync);
 let splashDone=false;
 (function(){const l=document.querySelector("#menu .ttl").outerHTML.replace(/id="(\w+)"/g,'id="z$1"').replace(/url\(#(\w+)\)/g,'url(#z$1)');$("s0l").innerHTML=l;
 setTimeout(()=>{$("s0go").classList.add("on")},3100)})();
-$("s0go").onclick=()=>{document.body.classList.add("go");splashDone=true;$("s0").classList.add("out");musicStart();setTimeout(()=>$("s0").remove(),700)};
+$("s0go").onclick=()=>{document.body.classList.add("go");splashDone=true;olBoot();$("s0").classList.add("out");musicStart();setTimeout(()=>$("s0").remove(),700)};
 $("bm").addEventListener("click",()=>musicStart());
 (function(){const b=document.createElement("button");b.id="pz";b.className="ib";b.setAttribute("aria-label","Pause");b.innerHTML='<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1.5"/><rect x="14" y="4" width="4" height="16" rx="1.5"/></svg>';$("bm").parentNode.insertBefore(b,$("bm"));
 const m=document.createElement("div");m.id="pm";m.className="ov";m.hidden=true;m.innerHTML='<div class="cd"><h3>Pause</h3><button class="pk g" id="pc">Continuer</button><button class="pk" id="pr">Recommencer</button><button class="pk s" id="pq">Quitter</button></div>';document.body.appendChild(m)})();
@@ -473,7 +496,7 @@ if(/email.*invalid|invalid.*email/i.test(m))return "Adresse interne refusée : c
 if(/rate|seconds|too many/i.test(m))return "Trop d’essais, réessaie dans une minute.";
 if(/fetch|network/i.test(m))return "Connexion impossible. Vérifie ton réseau.";
 return "Erreur : "+m}
-async function olOpen(){olEl.hidden=false;OL.msg="";
+async function olOpen(){olEl.hidden=false;OL.msg="";OL.view=OL.me?"hub":"load";olRender();
 try{await olLib()}catch(e){OL.view="err";olRender();return}
 try{sb=sb||window.supabase.createClient(SBURL,SBKEY);if(!OL.au){OL.au=1;sb.auth.onAuthStateChange((ev,ss)=>{OL.tok=ss?ss.access_token:null})}
 const r=await sb.auth.getSession();
@@ -482,7 +505,7 @@ else{OL.view="auth";try{OL.tab=localStorage.getItem("tiq7acc")?"in":"new"}catch(
 catch(e){OL.view="err"}
 olRender()}
 async function olMe(id){const r=await sb.from("profiles").select("id,pseudo,code").eq("id",id).maybeSingle();
-if(r.data){OL.me=r.data;OL.view="hub";olStart();olFetchStats();await olLoad();return true}
+if(r.data){OL.me=r.data;OL.view="hub";olStart();olFetchStats();olLoad();return true}
 else{await sb.auth.signOut();OL.me=null;OL.view="auth";OL.tab="in";OL.ok=0;OL.msg=r.error?"Profil illisible : "+r.error.message:"Compte trouvé mais profil introuvable (problème côté Supabase).";return false}}
 function olStart(){if(!OL.ch)OL.ch=sb.channel("inv-"+OL.me.id).on("postgres_changes",{event:"*",schema:"public",table:"invitations"},()=>olLoad()).on("postgres_changes",{event:"*",schema:"public",table:"friendships"},()=>olLoad()).subscribe();
 if(!OL.tm)OL.tm=setInterval(()=>{if(!olEl.hidden)olLoad()},8000);if(!OL.hb){olPing();OL.hb=setInterval(olPing,60000)}}
@@ -495,21 +518,22 @@ if(r.error)return;
 const rows=r.data||[],me=OL.me.id,rec=rows.filter(x=>x.to_id==me&&x.status=="pending"),sent=rows.filter(x=>x.from_id==me);
 if(OL.seen){
 rec.forEach(x=>{if(!OL.seen.rec.has(x.id))olToast((x.f?x.f.pseudo:"Un joueur")+" te défie !")});
-sent.forEach(x=>{const o=OL.seen.st[x.id];if(o&&o!=x.status){const n=x.t?x.t.pseudo:"Le joueur";if(x.status=="accepted"){olToast(n+" a accepté ton défi !");if(!ON&&$("game").hidden&&x.game_id)olPlay(x.game_id)}else if(x.status=="declined")olToast(n+" a refusé ton défi.")}})}
-OL.seen={rec:new Set(rec.map(x=>x.id)),st:Object.fromEntries(sent.map(x=>[x.id,x.status]))};
+sent.forEach(x=>{const o=OL.seen.st[x.id];if(o&&o!=x.status){const n=x.t?x.t.pseudo:"Le joueur";if(x.status=="accepted"){olToast(n+" a accepté ton défi !");if(!ON&&!OL.wait&&$("game").hidden&&x.game_id)olPlay(x.game_id)}else if(x.status=="declined")olToast(n+" a refusé ton défi.")}})}
+OL.seen={rec:new Set(rec.map(x=>x.id)),st:Object.fromEntries(sent.map(x=>[x.id,x.status]))};olWaitCheck(sent);
 OL.inv=rec;OL.sent=sent;const gq=await sb.from("games").select("id,black_id,red_id").eq("winner",0).gte("created_at",new Date(Date.now()-864e5).toISOString()).order("created_at",{ascending:false}).limit(1);OL.game=gq.data&&gq.data[0]||null;olResume();
 const fq=await sb.from("friendships").select("id,status,from_id,to_id,f:profiles!friendships_from_id_fkey(pseudo,last_seen),t:profiles!friendships_to_id_fkey(pseudo,last_seen)").order("created_at",{ascending:false});OL.fr=fq.data||[];
 const fr=OL.fr.filter(x=>x.to_id==me);if(OL.seenF)fr.forEach(x=>{if(!OL.seenF.has(x.id))olToast((x.f?x.f.pseudo:"Un joueur")+" t’a ajouté en ami !")});OL.seenF=new Set(fr.map(x=>x.id));
 const nb=$("onl").querySelector(".bdg")||$("onl").appendChild(Object.assign(document.createElement("i"),{className:"bdg"}));nb.textContent=rec.length;nb.hidden=!rec.length;
 olRender(true)}
 function olRender(soft){
-if(soft&&olEl.hidden)return;
+if(soft&&(olEl.hidden||OL.view=="wait"))return;
 const f=document.activeElement;if(soft&&f&&f.classList&&f.classList.contains("in"))return;
 const keep={};olEl.querySelectorAll(".in").forEach(i=>keep[i.id]=i.value);
 const v=OL.view,n=OL.inv.length,me=OL.me,fn=me?(OL.fr||[]).filter(x=>x.status=="pending"&&x.to_id==me.id).length:0;
 const head=(t,back)=>`<div class="olh"><button class="wb" data-k="${back}" aria-label="Retour">←</button><h2>${t}</h2><span class="wsp"></span></div>`;
 let h="";
-if(v=="err")h=head("Jouer en ligne","close")+`<div class="cd"><p>Impossible de charger le service en ligne. Vérifie ta connexion puis réessaie.</p><button class="pk g" data-k="retry">Réessayer</button></div>`;
+if(v=="load")h=head("Jouer en ligne","close")+`<div class="olload">Chargement en cours…</div>`;
+else if(v=="err")h=head("Jouer en ligne","close")+`<div class="cd"><p>Impossible de charger le service en ligne. Vérifie ta connexion puis réessaie.</p><button class="pk g" data-k="retry">Réessayer</button></div>`;
 else if(v=="auth"){const nw=OL.tab=="new";
 h=head("Jouer en ligne","close")+`<div class="cd"><div class="tabs"><button class="tab${nw?" on":""}" data-k="tab-new">Créer mon profil</button><button class="tab${nw?"":" on"}" data-k="tab-in">Me connecter</button></div>
 <label class="lb" for="olp">Pseudo</label><input class="in" id="olp" maxlength="16" autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="ex : Leon_228">
@@ -522,9 +546,10 @@ else if(v=="hub")h=`<div class="olh"><button class="wb" data-k="close" aria-labe
 <button class="pk" data-k="go-fr">Amis${fn?`<i class="bdg">${fn}</i>`:""}</button>
 <button class="pk s" data-k="go-code">Mon code</button>
 <button class="lnk" data-k="out">Se déconnecter</button>`;
+else if(v=="wait")h=`<div class="olh"><span class="wsp"></span><h2>${OL.wprev=="fr"?"Amis":"Défier un joueur"}</h2><span class="wsp"></span></div><div class="cd wcd"><div class="orb"><i class="o1"></i><i class="o2"></i></div><div class="wtx">En attente de l’adversaire…</div><div class="wnm">${esc(OL.wait?OL.wait.name:"")}</div><button class="wcn" data-k="wcan">Annuler le défi</button></div>`;
 else if(v=="inv")h=head("Invitations","go-hub")+`<div class="cd">${n?OL.inv.slice().reverse().map(x=>`<div class="it"><span><i class="dot${olOn(x.f)?" on":""}"></i><b>${esc(x.f?x.f.pseudo:"Joueur")}</b> te défie !${olOn(x.f)?"":"<br><small>Hors ligne : attends son retour.</small>"}</span>${olOn(x.f)?`<button class="mini" data-k="acc" data-id="${x.id}">Accepter</button>`:""}<button class="mini r" data-k="dec" data-id="${x.id}">Refuser</button></div>`).join(""):"<p>Aucune invitation pour le moment.</p>"}</div>`;
 else if(v=="def")h=head("Défier un joueur","go-hub")+`<div class="cd"><label class="lb" for="olc2">Code du joueur</label><input class="in" id="olc2" maxlength="9" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="TIQ-7K2M9"><div class="msg" id="olm"></div><button class="pk g" data-k="send">Envoyer l’invitation</button></div>${OL.sent.length?`<div class="cd"><h3>Mes invitations</h3>${OL.sent.map(x=>`<div class="it"><span><b>${esc(x.t?x.t.pseudo:"Joueur")}</b> · ${({pending:"en attente…",accepted:"a accepté ✓",declined:"a refusé",cancelled:"annulée"})[x.status]||x.status}</span>${x.status=="pending"?`<button class="mini n" data-k="can" data-id="${x.id}">Annuler</button>`:""}</div>`).join("")}</div>`:""}`;
-else if(v=="fr"){const fl=OL.fr||[],mid=me.id,acc=fl.filter(x=>x.status=="accepted"),rq=fl.filter(x=>x.status=="pending"&&x.to_id==mid),sn=fl.filter(x=>x.status=="pending"&&x.from_id==mid),who=x=>x.from_id==mid?x.t:x.f,on=p=>!!(p&&p.last_seen&&Date.now()-new Date(p.last_seen).getTime()<18e4);
+else if(v=="fr"){const fl=OL.fr||[],mid=me.id,acc=fl.filter(x=>x.status=="accepted"),rq=fl.filter(x=>x.status=="pending"&&x.to_id==mid),sn=fl.filter(x=>x.status=="pending"&&x.from_id==mid),who=x=>x.from_id==mid?x.t:x.f,on=p=>!!(p&&p.last_seen&&Date.now()-new Date(p.last_seen).getTime()<15e4);
 h=head("Amis","go-hub")+`<div class="cd"><label class="lb" for="olf">Ajouter un ami</label><input class="in" id="olf" maxlength="9" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="TIQ-7K2M9"><div class="msg" id="olm"></div><button class="pk g" data-k="addf">Ajouter</button></div>`
 +(rq.length?`<div class="cd"><h3>Demandes reçues</h3>${rq.map(x=>`<div class="it"><span><b>${esc(x.f?x.f.pseudo:"Joueur")}</b></span><button class="mini" data-k="facc" data-id="${x.id}">Accepter</button><button class="mini r" data-k="fdec" data-id="${x.id}">Refuser</button></div>`).join("")}</div>`:"")
 +`<div class="cd"><h3>Mes amis</h3>${acc.length?acc.map(x=>{const p=who(x);return `<div class="it"><span><i class="dot${on(p)?" on":""}"></i><b>${esc(p?p.pseudo:"Joueur")}</b></span><button class="mini" data-k="fch" data-id="${x.from_id==mid?x.to_id:x.from_id}">Défier</button><button class="mini n" data-k="frm" data-c="1" data-id="${x.id}" aria-label="Retirer">✕</button></div>`}).join(""):"<p>Pas encore d’ami. Ajoute-en avec leur code joueur.</p>"}</div>`
@@ -552,9 +577,9 @@ try{const f=await sb.rpc("trouver_joueur",{p_code:c});
 if(f.error||!f.data||!f.data.length){OL.busy=false;return olMsg("Aucun joueur avec ce code.")}
 const to=f.data[0];
 if(OL.sent.some(x=>x.to_id==to.id&&x.status=="pending")){OL.busy=false;return olMsg("Tu l’as déjà défié : attends sa réponse.")}
-const r=await sb.from("invitations").insert({from_id:OL.me.id,to_id:to.id});
+const r=await sb.from("invitations").insert({from_id:OL.me.id,to_id:to.id}).select("id").single();
 if(r.error){OL.busy=false;return olMsg("Envoi impossible : "+r.error.message)}
-OL.busy=false;OL.msg="Invitation envoyée à "+to.pseudo+" ! Reste en ligne jusqu’à sa réponse.";OL.ok=1;$("olc2").value="";await olLoad();olRender()}
+OL.busy=false;olWait(r.data.id,to.pseudo)}
 catch(e){OL.busy=false;olMsg(olErr(e.message))}}
 async function olSet(id,st){OL.busy=true;
 if(st=="accepted"){const a=await sb.rpc("accepter_invitation",{p_id:id});OL.busy=false;if(a.error)return olToast("Action impossible : "+a.error.message);await olLoad();return olPlay(a.data)}
@@ -591,6 +616,10 @@ OL.busy=true;const r=await sb.rpc("abandonner",{p_id:OL.game.id});OL.busy=false;
 if(r.error)return olToast("Action impossible : "+r.error.message);
 olToast("Partie abandonnée.");await olLoad()}
 function olLeave(){olStopG();ON=null;document.body.classList.remove("onl");sess++;busy=false;AMB.pause();$("game").hidden=true;$("menu").hidden=false;refresh();musicStart();if(OL.me)olLoad()}
+async function olBoot(){try{if(!localStorage.getItem("tiq7acc"))return}catch(e){return}
+try{await olLib();sb=sb||window.supabase.createClient(SBURL,SBKEY);if(!OL.au){OL.au=1;sb.auth.onAuthStateChange((ev,ss)=>{OL.tok=ss?ss.access_token:null})}
+const r=await sb.auth.getSession();if(r.data.session&&!OL.me)await olMe(r.data.session.user.id)}catch(e){}}
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)olPing()});
 function olPing(){if(sb&&OL.me&&!document.hidden)sb.rpc("ping").then(()=>{},()=>{})}
 async function olAddF(){const c=$("olf").value.trim().toUpperCase();
 if(!/^TIQ-[A-Z0-9]{5}$/.test(c))return olMsg("Entre un code comme TIQ-7K2M9.");
@@ -603,8 +632,19 @@ catch(e){OL.busy=false;olMsg(olErr(e.message))}}
 async function olFR(id,ok){OL.busy=true;const r=await sb.rpc("repondre_ami",{p_id:id,p_ok:ok});OL.busy=false;if(r.error)return olToast("Action impossible : "+r.error.message);await olLoad()}
 async function olFD(id){OL.busy=true;const r=await sb.from("friendships").delete().eq("id",id);OL.busy=false;if(r.error)return olToast("Action impossible : "+r.error.message);await olLoad()}
 async function olFCh(uid){if(OL.sent.some(x=>x.to_id==uid&&x.status=="pending"))return olToast("Tu l’as déjà défié : attends sa réponse.");
-OL.busy=true;const r=await sb.from("invitations").insert({from_id:OL.me.id,to_id:uid});OL.busy=false;
-if(r.error)return olToast("Envoi impossible : "+r.error.message);olToast("Défi envoyé !");await olLoad()}
+OL.busy=true;const r=await sb.from("invitations").insert({from_id:OL.me.id,to_id:uid}).select("id").single();OL.busy=false;
+if(r.error)return olToast("Envoi impossible : "+r.error.message);const fx=(OL.fr||[]).find(x=>x.from_id==uid||x.to_id==uid),fp=fx?(fx.from_id==uid?fx.f:fx.t):null;olWait(r.data.id,fp?fp.pseudo:"le joueur")}
+function olWait(id,name){OL.wait={id,name,t0:Date.now()};OL.wprev=OL.view=="fr"?"fr":"def";OL.view="wait";OL.msg="";olPing();olRender();clearInterval(OL.wt);OL.wt=setInterval(()=>{if(OL.wait)olLoad()},3000)}
+function olWaitEnd(){clearInterval(OL.wt);OL.wt=null;OL.wait=null;if(OL.view=="wait")OL.view=OL.wprev||"hub"}
+function olWaitCheck(sent){const w=OL.wait;if(!w)return;const x=sent.find(y=>y.id==w.id);
+if(!x||x.status=="pending"){if(Date.now()-w.t0>12e4)olWaitCancel(true);return}
+olWaitEnd();
+if(x.status=="accepted"&&x.game_id)olPlay(x.game_id);
+else{if(x.status=="declined")olToast(w.name+" a refusé ton défi.");olRender()}}
+async function olWaitCancel(auto){const w=OL.wait;if(!w)return;olWaitEnd();olRender();
+const r=await sb.from("invitations").update({status:"cancelled"}).eq("id",w.id).eq("status","pending").select("id");
+if(!r.error&&(!r.data||!r.data.length)){const q=await sb.from("invitations").select("status,game_id").eq("id",w.id).maybeSingle();if(q.data&&q.data.status=="accepted"&&q.data.game_id)return olPlay(q.data.game_id)}
+if(auto)olToast("Pas de réponse : le défi est annulé.");await olLoad()}
 function olRemote(m){const mv={f:m.f,t:m.t,c:m.c};
 if(!(mv.c>=0)){play(mv,true);return}
 const k=sess;busy=true;pend={f:mv.f,t:mv.t};anim={f:mv.f,t:mv.t,c:-1,p:s.t,sl:mv.f<0?s.h[s.t]-1:-1};pion();draw();
@@ -624,8 +664,9 @@ function olSetOw(n){try{localStorage.setItem("tiq7wo",n)}catch(e){}refresh()}
 async function olFetchStats(){const r=await sb.from("stats").select("wins_online").eq("user_id",OL.me.id).maybeSingle();if(r.error)return;olSetOw(r.data?r.data.wins_online:0)}
 function olRec(){const O=ON;sb.rpc("enregistrer_fin_partie",{p_id:O.id}).then(r=>{if(r.data&&typeof r.data.wins_online=="number")olSetOw(r.data.wins_online)},()=>{})}
 document.body.insertAdjacentHTML("beforeend",'<div id="sc" class="ov" hidden><div class="cd"></div></div>');
-function stOpen(){const w=wins(),i=RK.reduce((a,k,j)=>w>=k[1]?j:a,0),nx=RK[i+1],lo=RK[i][1],pct=nx?Math.round((w-lo)/(nx[1]-lo)*100):100,rest=nx?nx[1]-w:0;
-$("sc").querySelector(".cd").innerHTML=`<h3>Statistiques</h3><div class="slb">Rang</div><div class="srk">${RK[i][0]}</div><div class="slb" style="margin-top:10px">Victoires</div><div class="sbg">${w}</div><div class="sbar"><i style="width:${pct}%"></i></div><p class="snt">${nx?"Encore "+rest+" victoire"+(rest>1?"s":"")+" pour devenir "+nx[0]+".":"Rang maximum atteint !"}</p><p class="snt">En ligne : ${ow()} · Contre l’ordinateur : ${lw()}</p><button class="pk g" id="scx">OK</button>`;
+function stOpen(){const w=wins(),i=RK.reduce((a,k,j)=>w>=k[1]?j:a,0),nx=RK[i+1],lo=RK[i][1],pct=Math.min(100,Math.round(w/RK[RK.length-1][1]*100)),rest=nx?nx[1]-w:0,toL=RK[RK.length-1][1]-w;
+const rows=RK.map((k,j)=>{const n=RK[j+1];return `<div class="srw${j<i?" dn":j==i?" nw":""}"><span>${j<i?"✓ ":j==i?"▶ ":""}${k[0]}</span><b>${n?k[1]+" – "+(n[1]-1):k[1]+" et plus"}</b></div>`}).join("");
+$("sc").querySelector(".cd").innerHTML=`<h3>Statistiques</h3><div class="sgr"><div><div class="slb">Rang</div><div class="srk">${RK[i][0]}</div></div><div><div class="slb">Victoires</div><div class="sbg">${w}</div></div></div><div class="sbar"><i style="width:${pct}%"></i></div><p class="snt">${nx?"Encore "+rest+" victoire"+(rest>1?"s":"")+" pour devenir "+nx[0]+".":"Rang maximum atteint !"}</p>${nx&&i<RK.length-2?`<p class="snt">Légende : encore ${toL} victoires.</p>`:""}<div class="slist">${rows}</div><p class="snt" style="margin-top:10px">En ligne : ${ow()} · Contre l’ordinateur : ${lw()}</p><button class="pk g" id="scx">OK</button>`;
 $("scx").onclick=()=>{$("sc").hidden=true};$("sc").hidden=false}
 $("sp").onclick=stOpen;
 const ER=["👏","😮","😅","😂","🤔","🤝"];
@@ -655,9 +696,11 @@ catch(e){}finally{OL.pl=0}}
 function olOn(p){return !!(p&&p.last_seen&&Date.now()-new Date(p.last_seen).getTime()<15e4)}
 addEventListener("pagehide",()=>{if(!OL.tok)return;try{fetch(SBURL+"/rest/v1/rpc/hors_ligne",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json",apikey:SBKEY,Authorization:"Bearer "+OL.tok},body:"{}"})}catch(e){}});
 document.addEventListener("visibilitychange",()=>{if(!document.hidden&&ON&&!over){olPres();olSync()}});
+addEventListener("pagehide",()=>{if(!OL.wait||!OL.tok)return;try{fetch(SBURL+"/rest/v1/invitations?id=eq."+OL.wait.id+"&status=eq.pending",{method:"PATCH",keepalive:true,headers:{"Content-Type":"application/json",apikey:SBKEY,Authorization:"Bearer "+OL.tok,Prefer:"return=minimal"},body:JSON.stringify({status:"cancelled"})})}catch(e){}});
 olEl.onclick=async e=>{const b=e.target.closest("[data-k]");if(!b||OL.busy)return;const k=b.dataset.k;
 if(k=="close"){olEl.hidden=true;return}
 if(k=="retry")return olOpen();
+if(k=="wcan")return olWaitCancel(false);
 if(k=="tab-new"||k=="tab-in"){OL.tab=k=="tab-new"?"new":"in";OL.msg="";return olRender()}
 if(k=="go-auth")return olAuth();
 if(k.slice(0,3)=="go-"){OL.view=k.slice(3);OL.msg="";return olRender()}
@@ -673,4 +716,5 @@ if(k=="copy"){try{await navigator.clipboard.writeText(OL.me.code);olToast("Code 
 if(k=="wa"){const t="Défie-moi sur T·IQ+7 ! Mon code joueur : "+OL.me.code+"\n"+location.href.split("#")[0];window.open("https://wa.me/?text="+encodeURIComponent(t),"_blank");return}
 if(k=="out"){OL.busy=true;try{await sb.auth.signOut()}catch(x){}OL.busy=false;olStop();OL.me=null;OL.inv=[];OL.sent=[];OL.seen=null;OL.seenF=null;OL.fr=[];OL.game=null;OL.view="auth";OL.tab="in";OL.msg="";const nb=$("onl").querySelector(".bdg");if(nb)nb.hidden=true;olRender()}};
 $("onl").onclick=olOpen;
+setTimeout(()=>{olLib().then(()=>{try{sb=sb||window.supabase.createClient(SBURL,SBKEY)}catch(e){}}).catch(()=>{})},1500);
 </script></body></html>
