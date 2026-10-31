@@ -193,6 +193,8 @@ body.onl #rx{display:grid}
 .rxb{position:fixed;z-index:15;text-align:center;font-size:72px;line-height:1;pointer-events:none;transform:translate(-50%,-50%);filter:drop-shadow(0 4px 6px rgba(0,0,0,.45));animation:rxp 2s ease-out forwards}
 @keyframes rxp{0%{transform:translate(-50%,-50%) scale(.3);opacity:0}12%{transform:translate(-50%,-50%) scale(1.25);opacity:1}25%{transform:translate(-50%,-50%) scale(1)}85%{opacity:1}100%{transform:translate(-50%,-62%) scale(1);opacity:0}}
 .wcd{text-align:center;padding:12px 14px}
+.wmid{position:fixed;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;pointer-events:none}
+#ol .wmid .cd{pointer-events:auto;width:calc(100% - 32px);max-width:388px;margin:0}
 .orb{position:relative;width:84px;height:36px;margin:0 auto 6px}
 .orb i{position:absolute;left:31px;top:7px;width:22px;height:22px;border-radius:50%;border:2px solid rgba(0,0,0,.55);box-sizing:border-box;animation:orb .9s linear infinite}
 .orb i::after{content:"";position:absolute;left:4px;top:3px;width:8px;height:4px;border-radius:50%;background:#fff;opacity:.3}
@@ -546,7 +548,7 @@ else if(v=="hub")h=`<div class="olh"><button class="wb" data-k="close" aria-labe
 <button class="pk" data-k="go-fr">Amis${fn?`<i class="bdg">${fn}</i>`:""}</button>
 <button class="pk s" data-k="go-code">Mon code</button>
 <button class="lnk" data-k="out">Se déconnecter</button>`;
-else if(v=="wait")h=`<div class="olh"><span class="wsp"></span><h2>${OL.wprev=="fr"?"Amis":"Défier un joueur"}</h2><span class="wsp"></span></div><div class="cd wcd"><div class="orb"><i class="o1"></i><i class="o2"></i></div><div class="wtx">En attente de l’adversaire…</div><div class="wnm">${esc(OL.wait?OL.wait.name:"")}</div><button class="wcn" data-k="wcan">Annuler le défi</button></div>`;
+else if(v=="wait")h=`<div class="olh"><span class="wsp"></span><h2>${OL.wprev=="fr"?"Amis":"Défier un joueur"}</h2><span class="wsp"></span></div><div class="wmid"><div class="cd wcd"><div class="orb"><i class="o1"></i><i class="o2"></i></div><div class="wtx">En attente de l’adversaire…</div><div class="wnm">${esc(OL.wait?OL.wait.name:"")}</div><button class="wcn" data-k="wcan">Annuler le défi</button></div></div>`;
 else if(v=="inv")h=head("Invitations","go-hub")+`<div class="cd">${n?OL.inv.slice().reverse().map(x=>`<div class="it"><span><i class="dot${olOn(x.f)?" on":""}"></i><b>${esc(x.f?x.f.pseudo:"Joueur")}</b> te défie !${olOn(x.f)?"":"<br><small>Hors ligne : attends son retour.</small>"}</span>${olOn(x.f)?`<button class="mini" data-k="acc" data-id="${x.id}">Accepter</button>`:""}<button class="mini r" data-k="dec" data-id="${x.id}">Refuser</button></div>`).join(""):"<p>Aucune invitation pour le moment.</p>"}</div>`;
 else if(v=="def")h=head("Défier un joueur","go-hub")+`<div class="cd"><label class="lb" for="olc2">Code du joueur</label><input class="in" id="olc2" maxlength="9" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="TIQ-7K2M9"><div class="msg" id="olm"></div><button class="pk g" data-k="send">Envoyer l’invitation</button></div>${OL.sent.length?`<div class="cd"><h3>Mes invitations</h3>${OL.sent.map(x=>`<div class="it"><span><b>${esc(x.t?x.t.pseudo:"Joueur")}</b> · ${({pending:"en attente…",accepted:"a accepté ✓",declined:"a refusé",cancelled:"annulée"})[x.status]||x.status}</span>${x.status=="pending"?`<button class="mini n" data-k="can" data-id="${x.id}">Annuler</button>`:""}</div>`).join("")}</div>`:""}`;
 else if(v=="fr"){const fl=OL.fr||[],mid=me.id,acc=fl.filter(x=>x.status=="accepted"),rq=fl.filter(x=>x.status=="pending"&&x.to_id==mid),sn=fl.filter(x=>x.status=="pending"&&x.from_id==mid),who=x=>x.from_id==mid?x.t:x.f,on=p=>!!(p&&p.last_seen&&Date.now()-new Date(p.last_seen).getTime()<15e4);
@@ -619,7 +621,8 @@ function olLeave(){olStopG();ON=null;document.body.classList.remove("onl");sess+
 async function olBoot(){try{if(!localStorage.getItem("tiq7acc"))return}catch(e){return}
 try{await olLib();sb=sb||window.supabase.createClient(SBURL,SBKEY);if(!OL.au){OL.au=1;sb.auth.onAuthStateChange((ev,ss)=>{OL.tok=ss?ss.access_token:null})}
 const r=await sb.auth.getSession();if(r.data.session&&!OL.me)await olMe(r.data.session.user.id)}catch(e){}}
-document.addEventListener("visibilitychange",()=>{if(!document.hidden)olPing()});
+document.addEventListener("visibilitychange",()=>{if(document.hidden)olOff();else olPing()});
+function olOff(){if(!OL.tok)return;try{fetch(SBURL+"/rest/v1/rpc/hors_ligne",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json",apikey:SBKEY,Authorization:"Bearer "+OL.tok},body:"{}"})}catch(e){}}
 function olPing(){if(sb&&OL.me&&!document.hidden)sb.rpc("ping").then(()=>{},()=>{})}
 async function olAddF(){const c=$("olf").value.trim().toUpperCase();
 if(!/^TIQ-[A-Z0-9]{5}$/.test(c))return olMsg("Entre un code comme TIQ-7K2M9.");
