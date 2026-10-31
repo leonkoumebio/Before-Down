@@ -2,6 +2,14 @@
 <html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>T·IQ+7</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#24140f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="T·IQ+7">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Nunito:wght@400;700;900&display=swap">
 <style>
 :root{--bg:#24140f;--ink:#f3e6d3;--mut:#c9b49a;--gold:#d9ad5e;--g:#006a4e;--y:#ffce00;--r:#d01234;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -111,7 +119,8 @@ body.go #menu .mw>*:not(.ttl){animation:mwin .8s ease-out both}
 #sn .x{display:none}
 #sn.off .w{display:none}
 #sn.off .x{display:inline}
-html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.in{-webkit-user-select:text;user-select:text}
 body{position:fixed;inset:0;width:100%;min-height:0;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);box-sizing:border-box}
 main{height:100%;box-sizing:border-box}
 #game{height:100%;display:flex;flex-direction:column;touch-action:none}
@@ -720,4 +729,5 @@ if(k=="wa"){const t="Défie-moi sur T·IQ+7 ! Mon code joueur : "+OL.me.code+"\n
 if(k=="out"){OL.busy=true;try{await sb.auth.signOut()}catch(x){}OL.busy=false;olStop();OL.me=null;OL.inv=[];OL.sent=[];OL.seen=null;OL.seenF=null;OL.fr=[];OL.game=null;OL.view="auth";OL.tab="in";OL.msg="";const nb=$("onl").querySelector(".bdg");if(nb)nb.hidden=true;olRender()}};
 $("onl").onclick=olOpen;
 setTimeout(()=>{olLib().then(()=>{try{sb=sb||window.supabase.createClient(SBURL,SBKEY)}catch(e){}}).catch(()=>{})},1500);
+if("serviceWorker" in navigator&&location.protocol.indexOf("http")==0)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 </script></body></html>
